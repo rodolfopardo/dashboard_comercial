@@ -47,6 +47,9 @@ GEMINI_API_KEY se toma sola del Secret Manager de `observadordw` vía gcloud
 
 ## 5. Pendientes (para la próxima)
 
+0. **REDISEÑAR EL DASHBOARD (prioridad #1)** — Rodolfo lo vio el 12-jun y dijo "está muy
+   básico, lo vamos a trabajar más tarde". El pipeline de datos está OK; lo que hay que
+   levantar es la capa visual (referencia de nivel: dashboards de `mineria_oro/`).
 1. **Validar con Rodolfo** los resultados de la primera semana (¿falsos positivos? ¿faltó alguna marca conocida?).
 2. **Histórico/tendencia**: el dashboard hoy muestra solo la última semana; `data/<YYYY-WW>.json`
    ya guarda histórico para agregar evolución semanal.
