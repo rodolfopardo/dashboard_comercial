@@ -4,35 +4,83 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pauta comercial en medios uruguayos · El Observador</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  :root { --azul:#00386c; --acento:#f5a623; --gris:#f4f6f8; --borde:#e2e8f0; }
-  * { box-sizing:border-box; margin:0; }
-  body { font-family:-apple-system,'Segoe UI',Roboto,sans-serif; background:var(--gris); color:#1a202c; }
-  header { background:var(--azul); color:#fff; padding:22px 32px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
-  header img.logo { width:44px; height:44px; border-radius:9px; flex:0 0 auto; }
-  header .titulo { display:flex; flex-direction:column; gap:3px; }
-  header h1 { font-size:21px; font-weight:700; }
-  header .sub { opacity:.75; font-size:13px; }
-  main { max-width:1180px; margin:26px auto; padding:0 20px; }
-  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:26px; }
-  .kpi { background:#fff; border:1px solid var(--borde); border-radius:10px; padding:16px 18px; }
-  .kpi .n { font-size:30px; font-weight:800; color:var(--azul); }
-  .kpi .l { font-size:12px; color:#64748b; margin-top:4px; text-transform:uppercase; letter-spacing:.4px; }
-  h2 { font-size:16px; margin:26px 0 12px; color:var(--azul); }
-  table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--borde); border-radius:10px; overflow:hidden; font-size:14px; }
-  th { background:#eef2f7; text-align:left; padding:10px 12px; font-size:12px; text-transform:uppercase; letter-spacing:.4px; color:#475569; }
-  td { padding:10px 12px; border-top:1px solid var(--borde); vertical-align:top; }
-  td.center, th.center { text-align:center; }
-  .dot { display:inline-block; min-width:26px; padding:2px 7px; border-radius:99px; background:var(--azul); color:#fff; font-weight:700; font-size:12px; }
-  .dot.cero { background:#cbd5e1; color:#475569; font-weight:400; }
-  .chip { display:inline-block; background:#eef2f7; border-radius:6px; padding:2px 8px; font-size:11px; color:#475569; margin:1px 2px; }
-  .chip.op { background:#fff7e6; color:#92600a; border:1px solid #f5d9a8; font-weight:600; }
-  .chip.si { background:#e6f6ec; color:#176b3a; }
-  a { color:var(--azul); }
-  .nota { margin:3px 0; line-height:1.45; }
-  .nota .medio { font-size:11px; color:#64748b; }
-  .vacio { background:#fff; border:1px dashed var(--borde); border-radius:10px; padding:28px; text-align:center; color:#64748b; }
-  footer { text-align:center; color:#94a3b8; font-size:12px; margin:34px 0 22px; }
+  :root{
+    --bg:#eef2f0; --card:#ffffff; --ink:#0f1a14; --muted:#647a70;
+    --green:#16b364; --green-d:#0f8a4c; --green-soft:#e4f8ed;
+    --amber:#e8870b; --amber-soft:#fdf1de;
+    --blue:#2563eb; --border:#e3e9e6; --shadow:0 1px 3px rgba(15,26,20,.06),0 8px 24px rgba(15,26,20,.05);
+  }
+  *{box-sizing:border-box;margin:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  a{color:var(--green-d);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header{background:#0f1a14;color:#fff;padding:20px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  header img.logo{width:46px;height:46px;border-radius:11px;flex:0 0 auto}
+  header .titulo h1{font-size:20px;font-weight:700;letter-spacing:-.2px}
+  header .titulo .sub{opacity:.7;font-size:13px;margin-top:2px}
+  header .meta{margin-left:auto;text-align:right;font-size:12px;opacity:.75;line-height:1.6}
+  header .meta b{color:var(--green);font-weight:700;font-size:14px}
+
+  main{max-width:1240px;margin:24px auto;padding:0 22px}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+  .kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green)}
+  .kpi.op::before{background:var(--amber)}
+  .kpi.blue::before{background:var(--blue)}
+  .kpi .n{font-size:32px;font-weight:800;letter-spacing:-1px}
+  .kpi.op .n{color:var(--amber)} .kpi .n{color:var(--green-d)} .kpi.blue .n{color:var(--blue)} .kpi.ink .n{color:var(--ink)}
+  .kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+
+  .grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:20px}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+  .panel h3{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:14px;font-weight:700}
+  .chart-wrap{position:relative;height:230px}
+
+  .filtros{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .filtros .search{flex:1;min-width:220px;position:relative}
+  .filtros .search input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:#fff;color:var(--ink)}
+  .filtros .search input:focus{outline:none;border-color:var(--green)}
+  .filtros .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.4}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip-f{padding:7px 13px;border-radius:99px;border:1px solid var(--border);background:#fff;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;user-select:none;transition:.12s;display:inline-flex;align-items:center;gap:6px}
+  .chip-f .c{width:8px;height:8px;border-radius:99px;background:#cbd5cf}
+  .chip-f.on{background:var(--green-soft);border-color:var(--green);color:var(--green-d)}
+  .chip-f.on .c{background:var(--green)}
+  .chip-f.op.on{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
+  .chip-f.op.on .c{background:var(--amber)}
+  select.sel{padding:8px 11px;border:1px solid var(--border);border-radius:10px;font-size:13px;background:#fff;color:var(--ink);cursor:pointer}
+  .btn-clr{padding:8px 13px;border:1px solid var(--border);border-radius:10px;font-size:12.5px;font-weight:600;color:var(--muted);background:#fff;cursor:pointer}
+  .btn-clr:hover{border-color:var(--green);color:var(--green-d)}
+  .resultados{font-size:12.5px;color:var(--muted);margin-left:auto;font-weight:600}
+
+  h2{font-size:16px;margin:24px 0 12px;display:flex;align-items:center;gap:8px}
+  h2 .badge{background:var(--green-soft);color:var(--green-d);font-size:12px;padding:2px 9px;border-radius:99px;font-weight:700}
+
+  .tabla{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{background:#f3f7f5;text-align:left;padding:11px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;cursor:pointer;white-space:nowrap}
+  th.center,td.center{text-align:center}
+  th .arr{opacity:.4;font-size:9px}
+  td{padding:11px 14px;border-top:1px solid var(--border);vertical-align:top}
+  tbody tr:hover{background:#f8faf9}
+  .dot{display:inline-block;min-width:24px;padding:2px 8px;border-radius:99px;background:var(--green);color:#fff;font-weight:700;font-size:12px}
+  .dot.cero{background:#eef2f0;color:#9aa8a1;font-weight:500}
+  .pill{display:inline-block;border-radius:99px;padding:3px 11px;font-size:11.5px;font-weight:700}
+  .pill.op{background:var(--amber-soft);color:var(--amber)}
+  .pill.si{background:var(--green-soft);color:var(--green-d)}
+  .chip{display:inline-block;background:#f3f7f5;border-radius:6px;padding:2px 8px;font-size:11px;color:var(--muted);margin:1px 2px;border:1px solid var(--border)}
+  .chip.llm{background:#eef4ff;color:#2952cc;border-color:#d4e0ff}
+  .medio-tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:#f3f7f5;color:var(--muted)}
+  .titulo-nota{font-weight:600;color:var(--ink)} .titulo-nota:hover{color:var(--green-d)}
+  .fecha{font-size:11px;color:var(--muted);margin-top:2px}
+  .vacio{padding:34px;text-align:center;color:var(--muted);font-size:14px}
+  footer{text-align:center;color:#9aa8a1;font-size:12px;margin:32px 0 24px}
 </style>
 </head>
 <body>
@@ -40,69 +88,232 @@
   <img class="logo" src="data:image/png;base64,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" alt="El Observador">
   <div class="titulo">
     <h1>Pauta comercial en medios uruguayos</h1>
-    <span class="sub" id="sub"></span>
+    <div class="sub" id="sub"></div>
   </div>
+  <div class="meta" id="meta"></div>
 </header>
+
 <main>
   <div class="kpis" id="kpis"></div>
-  <h2>Marcas que pautaron esta semana</h2>
-  <div id="tabla-marcas"></div>
-  <h2>Todas las notas comerciales detectadas</h2>
-  <div id="lista-notas"></div>
+
+  <div class="grid2">
+    <div class="panel">
+      <h3>Notas comerciales por medio</h3>
+      <div class="chart-wrap"><canvas id="chMedio"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>Marcas: ¿pautan con nosotros?</h3>
+      <div class="chart-wrap"><canvas id="chOp"></canvas></div>
+    </div>
+  </div>
+
+  <div class="filtros">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" placeholder="Buscar marca o título…" autocomplete="off">
+    </div>
+    <div class="chips" id="chipsMedio"></div>
+    <div class="chip-f op" id="chipOp"><span class="c"></span>Solo oportunidades</div>
+    <select class="sel" id="selSeccion"></select>
+    <button class="btn-clr" id="btnClr">Limpiar</button>
+    <span class="resultados" id="resultados"></span>
+  </div>
+
+  <h2>Marcas que pautaron <span class="badge" id="badgeMarcas"></span></h2>
+  <div class="tabla" id="tabla-marcas"></div>
+
+  <h2>Notas comerciales detectadas <span class="badge" id="badgeNotas"></span></h2>
+  <div class="tabla" id="lista-notas"></div>
 </main>
+
 <footer>El Observador · Identificador de contenido comercial · generado 2026-06-15T21:19:18</footer>
+
 <script>
 const DATA = {"generado": "2026-06-15T21:19:18", "semana": "2026-W25", "ventana_dias": 7, "medios": {"elobservador": "El Observador", "elpais": "El País", "montevideo": "Montevideo Portal", "ladiaria": "la diaria"}, "resumen": {"notas_analizadas": 2530, "notas_comerciales": 13, "marcas_unicas": 13, "por_medio": {"elobservador": 0, "elpais": 7, "montevideo": 6, "ladiaria": 0}}, "marcas": [{"marca": "Tres Cruces", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/negocios/empresas/tres-cruces-genera-energia-renovable-con-2-400-paneles-solares-para-abastecer-el-equivalente-al-consumo-de-600-hogares", "titulo": "Tres Cruces genera energía renovable con 2.400 paneles solares para abastecer el  equivalente al consumo de 600 hogares", "fecha": "2026-06-15T03:00:00-04:00", "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Alfonsina", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/musica/alfonsina-presenta-pausa-y-fogueo-su-nuevo-album-me-canso-mucho-estar-detras-de-mi-nombre", "titulo": "Alfonsina presenta \"Pausa y fogueo\", su nuevo álbum: \"Me cansó mucho estar detrás de mi nombre\"", "fecha": "2026-06-15T01:00:00-04:00", "señales": ["lexico:presenta", "llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Toy Story 5", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/cine/el-pais-con-la-productora-de-toy-story-5-mas-alla-de-los-avances-tecnologicos-lo-fundamental-es-la-historia", "titulo": "El País con la productora de \"Toy Story 5\": \"Más allá de los avances tecnológicos lo fundamental es la historia\"", "fecha": "2026-06-14T01:00:00-04:00", "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "No Te Va Gustar", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/musica/no-te-va-gustar-trae-la-gira-de-florece-en-el-caos-no-queremos-ser-una-banda-tributo-de-lo-que-fuimos", "titulo": "No Te Va Gustar trae la gira de \"Florece en el caos\": \"No queremos ser una banda tributo de lo que fuimos\"", "fecha": "2026-06-14T01:02:00-04:00", "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "APPCU", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/negocios/columna-de-appcu-productividad-sin-limite", "titulo": "Columna de APPCU: “Productividad” sin límite", "fecha": "2026-06-14T02:10:16-04:00", "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "K-Pop World Festival", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/bienestar/descanso/viajes-y-paseos/k-pop-world-festival-2026-la-gran-cita-de-la-cultura-coreana-vuelve-a-encender-la-sala-zitarrosa", "titulo": "K-Pop World Festival 2026: la gran cita de la cultura coreana vuelve a encender la Sala Zitarrosa", "fecha": "2026-06-15T13:00:00-04:00", "señales": ["llm:1.0"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Luana", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/personajes/luana-hara-el-show-mas-grande-de-su-carrera-para-festejar-su-cumpleanos-fecha-lugar-y-como-comprar-entradas", "titulo": "Luana hará el show más grande de su carrera para festejar su cumpleaños: fecha, lugar y cómo comprar entradas", "fecha": "2026-06-15T10:04:52-04:00", "señales": ["lexico:festeja", "llm:1.0"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Impacto", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://www.montevideo.com.uy/Columnistas/Impacto-transformador-el-proposito-empresarial-definido-desde-el-liderazgo-sostenible-uc874426", "titulo": "Impacto transformador: el propósito empresarial definido desde el liderazgo sostenible", "fecha": null, "señales": ["tag Empresariales"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "TECH Global University", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://www.montevideo.com.uy/Negocios-y-Tendencias/TECH-Global-University-tiene-un-claustro-docente-que-la-posiciona-como-el-Harvard-online--uc964314", "titulo": "TECH Global University tiene un claustro docente que la posiciona como el Harvard online", "fecha": null, "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Coca-Cola", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://www.montevideo.com.uy/Negocios-y-Tendencias/El-sistema-Coca-Cola-en-Uruguay-avanza-en-su-compromiso-con-el-cuidado-del-medioambiente-uc964182", "titulo": "El sistema Coca Cola en Uruguay avanza en su compromiso con el cuidado del medioambiente", "fecha": null, "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "DIRECTV", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQcXpZYVpSakxOUmR5bG11N2w4Zk1wRHVYbEFDTEdxTE9BRXJ0NUFuUUJQeHZpYXZrR3lXWVROX1czeEhrZXZOYmR6bzkzeGZ3bndIcnVSSUVwcXNJc3ZiQ3BmTEJ1OWVWLVVvcmRDbF9IZTdDcUQ4Uk1JbXdPVUNkVlVYNlZTclhGOVZJQ0pHb1dLSnNzZ0dTUmU1OEk2bFR0WXc5ZXpHZk9lVTVqNHQ2cWkzVEZ6WXdXdUwtaVlvVGVNVE5WYWJyc0NTTHo3d9IB8gFBVV95cUxQSUV0VWxqc1NsWXRWcE5mekFBOHNOdC1yXzVVZ1NXeHVhcG1NX2tXWDM3S0NBN1h5VXNUaEFabmpVeGVYOXN0STZ0cEgybE5WdUF2dTVTUkZOckh0R3lBbThuOFlaNU9uUktnYm0zRzhaZjFRQWRJWFJDWlB3QTN0c1p5WkJKZEVrbGkwZUc0cDQtYlRaaGM4M2dzTEhaYUdnaHJKekszQ3dUaGc1RERBZWFSQmdpeXpVN3duYVJ0bllNOUlsVmJqMzVsaUlxbFphcjA2a1EzOXJWMzVGNGNxV3FrVTE5dmRfa0NQUk8xR0sxQQ?oc=5", "titulo": "Agenda deportiva de DIRECTV del fin de semana: el Mundial, vóley, ciclismo, motor y rugby", "fecha": "Fri, 12 Jun 2026 03:24:00 GMT", "señales": ["llm:1.0"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "PedidosYa", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOMjRBdDRhYjFKRkF6dDl0U3BWVjYyZTBIZGFuMjQ4S0pJa1VHLXgyX0R6ZjBpSUNRTGtqRi1fTU1SZjZlQlNlQlhySk5EaWJoNERqcXpDWWRpb3pYV1FrSjFhTzIyTnc2cXpSR0RUWFBFQUpLdEo4LThNZ3dCOXVxTU9KOUFNN05hNk40U253clJSMEQzbW95cnh4YS1wZkV2YzFvdTBfdHdkazRuNllaN0FWRWJsZ2FiSUM2dmI2WEZoNURpMXlZMHBoeWJ5RWZfUFdfbGtn0gH6AUFVX3lxTE1YcUlqdi1KZERDN2JBV3U3b3BYM2c0blJCZmdGTkpXZlB1WE1mTWpYRUgzTTVKQlU0ZW56ZnZLWi1VMTkxSkRkOXNDYW9sQVFkNGFpN1pIOHQ4SFhTYmRkVUhkZUxHbkVjQzZtUUE0TmlLendqbW9RdGFLVk9jajMtYzJVbDJuNUNsTDBuX3hxMS1RRkN3azFqY2tRTEQ5ZE1LV1BtbjlKWFZIR0g5U1pPTDlLVWxpRml6S3BzT3VLRzg4LTZDMnRIa2hJNHFlNTBTRGNiaXdJRXNKX1JvU0plYmc3b0VURkdDX2ZMaVVJZGlIUFFxeFNhUnc?oc=5", "titulo": "PedidosYa regala miles de cupones con cada gol en el Mundial: cómo conseguirlos", "fecha": "Mon, 15 Jun 2026 11:30:00 GMT", "señales": ["llm:1.0"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "MetLife", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxQSU9sYzNzTGpQUHJWb3Y3NVFPTVJmRGtvcm8xRXlidmtLc1g3MVczNTJWUEJPdXlndlNxblA3c3hGcl9GQVp1UnI2MEZyc3VQMHgzb3p0eG9kUWR0OExWdElWaGR5eURza2gtQ2JSaE5wQlRpOVNRRFN4cmtJZHU3eC1xRnVyLXFpcWY3NlRyWG9Tdm50cjlFV3ViZm9kZlRjVzNkNGp0bXJNOVhFUUNXMTRFcjRnX2NzTkxhbzJURWg1eFNjVjJyNWJxU1RfSE85bTVyTW53M3dVVVlBTjdwNw?oc=5", "titulo": "MetLife y MetLife Foundation renuevan espacios deportivos y comunitarios en Montevideo", "fecha": "Tue, 09 Jun 2026 15:34:00 GMT", "señales": ["lexico:renueva", "llm:"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}], "notas_comerciales": [{"medio": "elpais", "url": "https://www.elpais.com.uy/negocios/empresas/tres-cruces-genera-energia-renovable-con-2-400-paneles-solares-para-abastecer-el-equivalente-al-consumo-de-600-hogares", "titulo": "Tres Cruces genera energía renovable con 2.400 paneles solares para abastecer el  equivalente al consumo de 600 hogares", "seccion": "negocios", "fecha": "2026-06-15T03:00:00-04:00", "marca": "Tres Cruces", "señales": ["llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/musica/alfonsina-presenta-pausa-y-fogueo-su-nuevo-album-me-canso-mucho-estar-detras-de-mi-nombre", "titulo": "Alfonsina presenta \"Pausa y fogueo\", su nuevo álbum: \"Me cansó mucho estar detrás de mi nombre\"", "seccion": "tvshow", "fecha": "2026-06-15T01:00:00-04:00", "marca": "Alfonsina", "señales": ["lexico:presenta", "llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/cine/el-pais-con-la-productora-de-toy-story-5-mas-alla-de-los-avances-tecnologicos-lo-fundamental-es-la-historia", "titulo": "El País con la productora de \"Toy Story 5\": \"Más allá de los avances tecnológicos lo fundamental es la historia\"", "seccion": "tvshow", "fecha": "2026-06-14T01:00:00-04:00", "marca": "Toy Story 5", "señales": ["llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/musica/no-te-va-gustar-trae-la-gira-de-florece-en-el-caos-no-queremos-ser-una-banda-tributo-de-lo-que-fuimos", "titulo": "No Te Va Gustar trae la gira de \"Florece en el caos\": \"No queremos ser una banda tributo de lo que fuimos\"", "seccion": "tvshow", "fecha": "2026-06-14T01:02:00-04:00", "marca": "No Te Va Gustar", "señales": ["llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/negocios/columna-de-appcu-productividad-sin-limite", "titulo": "Columna de APPCU: “Productividad” sin límite", "seccion": "negocios", "fecha": "2026-06-14T02:10:16-04:00", "marca": "APPCU", "señales": ["llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/bienestar/descanso/viajes-y-paseos/k-pop-world-festival-2026-la-gran-cita-de-la-cultura-coreana-vuelve-a-encender-la-sala-zitarrosa", "titulo": "K-Pop World Festival 2026: la gran cita de la cultura coreana vuelve a encender la Sala Zitarrosa", "seccion": "bienestar", "fecha": "2026-06-15T13:00:00-04:00", "marca": "K-Pop World Festival", "señales": ["llm:1.0"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/personajes/luana-hara-el-show-mas-grande-de-su-carrera-para-festejar-su-cumpleanos-fecha-lugar-y-como-comprar-entradas", "titulo": "Luana hará el show más grande de su carrera para festejar su cumpleaños: fecha, lugar y cómo comprar entradas", "seccion": "tvshow", "fecha": "2026-06-15T10:04:52-04:00", "marca": "Luana", "señales": ["lexico:festeja", "llm:1.0"]}, {"medio": "montevideo", "url": "https://www.montevideo.com.uy/Columnistas/Impacto-transformador-el-proposito-empresarial-definido-desde-el-liderazgo-sostenible-uc874426", "titulo": "Impacto transformador: el propósito empresarial definido desde el liderazgo sostenible", "seccion": "Columnistas", "fecha": null, "marca": "Impacto", "señales": ["tag Empresariales"]}, {"medio": "montevideo", "url": "https://www.montevideo.com.uy/Negocios-y-Tendencias/TECH-Global-University-tiene-un-claustro-docente-que-la-posiciona-como-el-Harvard-online--uc964314", "titulo": "TECH Global University tiene un claustro docente que la posiciona como el Harvard online", "seccion": "Negocios-y-Tendencias", "fecha": null, "marca": "TECH Global University", "señales": ["llm:0.9"]}, {"medio": "montevideo", "url": "https://www.montevideo.com.uy/Negocios-y-Tendencias/El-sistema-Coca-Cola-en-Uruguay-avanza-en-su-compromiso-con-el-cuidado-del-medioambiente-uc964182", "titulo": "El sistema Coca Cola en Uruguay avanza en su compromiso con el cuidado del medioambiente", "seccion": "Negocios-y-Tendencias", "fecha": null, "marca": "Coca-Cola", "señales": ["llm:0.9"]}, {"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQcXpZYVpSakxOUmR5bG11N2w4Zk1wRHVYbEFDTEdxTE9BRXJ0NUFuUUJQeHZpYXZrR3lXWVROX1czeEhrZXZOYmR6bzkzeGZ3bndIcnVSSUVwcXNJc3ZiQ3BmTEJ1OWVWLVVvcmRDbF9IZTdDcUQ4Uk1JbXdPVUNkVlVYNlZTclhGOVZJQ0pHb1dLSnNzZ0dTUmU1OEk2bFR0WXc5ZXpHZk9lVTVqNHQ2cWkzVEZ6WXdXdUwtaVlvVGVNVE5WYWJyc0NTTHo3d9IB8gFBVV95cUxQSUV0VWxqc1NsWXRWcE5mekFBOHNOdC1yXzVVZ1NXeHVhcG1NX2tXWDM3S0NBN1h5VXNUaEFabmpVeGVYOXN0STZ0cEgybE5WdUF2dTVTUkZOckh0R3lBbThuOFlaNU9uUktnYm0zRzhaZjFRQWRJWFJDWlB3QTN0c1p5WkJKZEVrbGkwZUc0cDQtYlRaaGM4M2dzTEhaYUdnaHJKekszQ3dUaGc1RERBZWFSQmdpeXpVN3duYVJ0bllNOUlsVmJqMzVsaUlxbFphcjA2a1EzOXJWMzVGNGNxV3FrVTE5dmRfa0NQUk8xR0sxQQ?oc=5", "titulo": "Agenda deportiva de DIRECTV del fin de semana: el Mundial, vóley, ciclismo, motor y rugby", "seccion": null, "fecha": "Fri, 12 Jun 2026 03:24:00 GMT", "marca": "DIRECTV", "señales": ["llm:1.0"]}, {"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOMjRBdDRhYjFKRkF6dDl0U3BWVjYyZTBIZGFuMjQ4S0pJa1VHLXgyX0R6ZjBpSUNRTGtqRi1fTU1SZjZlQlNlQlhySk5EaWJoNERqcXpDWWRpb3pYV1FrSjFhTzIyTnc2cXpSR0RUWFBFQUpLdEo4LThNZ3dCOXVxTU9KOUFNN05hNk40U253clJSMEQzbW95cnh4YS1wZkV2YzFvdTBfdHdkazRuNllaN0FWRWJsZ2FiSUM2dmI2WEZoNURpMXlZMHBoeWJ5RWZfUFdfbGtn0gH6AUFVX3lxTE1YcUlqdi1KZERDN2JBV3U3b3BYM2c0blJCZmdGTkpXZlB1WE1mTWpYRUgzTTVKQlU0ZW56ZnZLWi1VMTkxSkRkOXNDYW9sQVFkNGFpN1pIOHQ4SFhTYmRkVUhkZUxHbkVjQzZtUUE0TmlLendqbW9RdGFLVk9jajMtYzJVbDJuNUNsTDBuX3hxMS1RRkN3azFqY2tRTEQ5ZE1LV1BtbjlKWFZIR0g5U1pPTDlLVWxpRml6S3BzT3VLRzg4LTZDMnRIa2hJNHFlNTBTRGNiaXdJRXNKX1JvU0plYmc3b0VURkdDX2ZMaVVJZGlIUFFxeFNhUnc?oc=5", "titulo": "PedidosYa regala miles de cupones con cada gol en el Mundial: cómo conseguirlos", "seccion": null, "fecha": "Mon, 15 Jun 2026 11:30:00 GMT", "marca": "PedidosYa", "señales": ["llm:1.0"]}, {"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxQSU9sYzNzTGpQUHJWb3Y3NVFPTVJmRGtvcm8xRXlidmtLc1g3MVczNTJWUEJPdXlndlNxblA3c3hGcl9GQVp1UnI2MEZyc3VQMHgzb3p0eG9kUWR0OExWdElWaGR5eURza2gtQ2JSaE5wQlRpOVNRRFN4cmtJZHU3eC1xRnVyLXFpcWY3NlRyWG9Tdm50cjlFV3ViZm9kZlRjVzNkNGp0bXJNOVhFUUNXMTRFcjRnX2NzTkxhbzJURWg1eFNjVjJyNWJxU1RfSE85bTVyTW53M3dVVVlBTjdwNw?oc=5", "titulo": "MetLife y MetLife Foundation renuevan espacios deportivos y comunitarios en Montevideo", "seccion": null, "fecha": "Tue, 09 Jun 2026 15:34:00 GMT", "marca": "MetLife", "señales": ["lexico:renueva", "llm:"]}]};
 const MEDIOS = DATA.medios;
 const ORDEN = ["elobservador","elpais","montevideo","ladiaria"];
+const COLOR = {elobservador:"#16b364", elpais:"#2563eb", montevideo:"#e8870b", ladiaria:"#9333ea"};
+
+// pauta_en_eo por marca (para derivar oportunidades sobre el set filtrado)
+const PAUTA = {};
+DATA.marcas.forEach(m => PAUTA[m.marca] = m.pauta_en_eo);
 
 document.getElementById("sub").textContent =
-  `Semana ${DATA.semana} · últimos ${DATA.ventana_dias} días · generado ${DATA.generado.replace("T"," ")}`;
+  `Semana ${DATA.semana} · últimos ${DATA.ventana_dias} días`;
+document.getElementById("meta").innerHTML =
+  `<b>${DATA.semana}</b><br>${DATA.resumen.notas_analizadas.toLocaleString("es")} notas analizadas<br>generado ${DATA.generado.slice(0,16).replace("T"," ")}`;
 
-const r = DATA.resumen;
-const oportunidades = DATA.marcas.filter(m => !m.pauta_en_eo && m.marca !== "(sin identificar)").length;
-document.getElementById("kpis").innerHTML = [
-  [r.notas_comerciales, "Notas comerciales"],
-  [r.marcas_unicas, "Marcas únicas"],
-  [r.por_medio.elobservador ?? 0, "En El Observador"],
-  [oportunidades, "Pautan afuera y no con nosotros"],
-  [r.notas_analizadas, "Notas analizadas"],
-].map(([n,l]) => `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+// ---- estado de filtros ----
+const state = { q:"", medios:new Set(ORDEN), soloOp:false, seccion:"all", sortMarca:["marca","asc"], sortNota:["fecha","desc"] };
 
-function celdas(m) {
-  return ORDEN.map(k => {
-    const n = m.medios[k] || 0;
-    return `<td class="center"><span class="dot ${n? "":"cero"}">${n}</span></td>`;
-  }).join("");
+// secciones disponibles
+const secciones = [...new Set(DATA.notas_comerciales.map(n=>n.seccion).filter(Boolean))].sort();
+document.getElementById("selSeccion").innerHTML =
+  `<option value="all">Todas las secciones</option>` + secciones.map(s=>`<option value="${s}">${s}</option>`).join("");
+
+// chips de medio
+document.getElementById("chipsMedio").innerHTML = ORDEN.map(k =>
+  `<div class="chip-f on" data-medio="${k}"><span class="c" style="background:${COLOR[k]}"></span>${MEDIOS[k]}</div>`).join("");
+
+function notasFiltradas(){
+  const q = state.q.toLowerCase();
+  return DATA.notas_comerciales.filter(n=>{
+    if(!state.medios.has(n.medio)) return false;
+    if(state.seccion!=="all" && n.seccion!==state.seccion) return false;
+    if(state.soloOp && PAUTA[n.marca]) return false;
+    if(q){ const hay = (n.titulo||"")+" "+(n.marca||""); if(!hay.toLowerCase().includes(q)) return false; }
+    return true;
+  });
 }
 
-const marcas = DATA.marcas;
-document.getElementById("tabla-marcas").innerHTML = marcas.length ? `
-  <table>
-    <tr><th>Marca</th>${ORDEN.map(k=>`<th class="center">${MEDIOS[k]}</th>`).join("")}
-        <th>Nota en El Observador</th><th>Lectura comercial</th></tr>
-    ${marcas.map(m => {
-      const menciones = (m.mencion_editorial_eo||[]).map(n =>
-        `<div class="nota"><a href="${n.url}" target="_blank">${n.titulo||n.url}</a></div>`).join("") || "—";
-      const lectura = m.pauta_en_eo
-        ? `<span class="chip si">ya pauta con nosotros</span>`
-        : `<span class="chip op">OPORTUNIDAD: pauta en competencia</span>`;
-      return `<tr><td><strong>${m.marca}</strong></td>${celdas(m)}<td>${menciones}</td><td>${lectura}</td></tr>`;
-    }).join("")}
-  </table>` : `<div class="vacio">No se detectaron notas comerciales esta semana.</div>`;
+function marcasFiltradas(notas){
+  const map = {};
+  notas.forEach(n=>{
+    const k = n.marca || "(sin identificar)";
+    if(!map[k]) map[k] = {marca:k, medios:{}, total:0, pauta_en_eo:!!PAUTA[k], notas:[]};
+    map[k].medios[n.medio] = (map[k].medios[n.medio]||0)+1;
+    map[k].total++; map[k].notas.push(n);
+  });
+  return Object.values(map);
+}
 
-const notas = DATA.notas_comerciales;
-document.getElementById("lista-notas").innerHTML = notas.length ? `
-  <table>
-    <tr><th>Medio</th><th>Marca</th><th>Nota</th><th>Señales de detección</th></tr>
-    ${notas.map(n => `<tr>
-      <td>${MEDIOS[n.medio]}</td>
-      <td><strong>${n.marca||"—"}</strong></td>
-      <td class="nota"><a href="${n.url}" target="_blank">${n.titulo||n.url}</a>
-          ${n.fecha? `<div class="medio">${n.fecha}</div>`:""}</td>
-      <td>${(n["señales"]||[]).map(s=>`<span class="chip">${s}</span>`).join("")}</td>
-    </tr>`).join("")}
-  </table>` : `<div class="vacio">Sin notas comerciales detectadas.</div>`;
+// ---- charts ----
+let chMedio, chOp;
+function initCharts(){
+  chMedio = new Chart(document.getElementById("chMedio"), {
+    type:"bar",
+    data:{labels:ORDEN.map(k=>MEDIOS[k]), datasets:[{data:ORDEN.map(()=>0),
+      backgroundColor:ORDEN.map(k=>COLOR[k]), borderRadius:7, barThickness:34}]},
+    options:{indexAxis:"y", plugins:{legend:{display:false}}, responsive:true, maintainAspectRatio:false,
+      scales:{x:{beginAtZero:true,ticks:{precision:0,color:"#647a70"},grid:{color:"#eef2f0"}},
+              y:{ticks:{color:"#0f1a14",font:{weight:600}},grid:{display:false}}}}
+  });
+  chOp = new Chart(document.getElementById("chOp"), {
+    type:"doughnut",
+    data:{labels:["Oportunidad (pauta afuera)","Ya pauta con nosotros"],
+      datasets:[{data:[0,0], backgroundColor:["#e8870b","#16b364"], borderWidth:0, hoverOffset:6}]},
+    options:{cutout:"62%", responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:"bottom",labels:{boxWidth:12,padding:14,color:"#647a70",font:{size:12}}}}}
+  });
+}
+function updateCharts(notas, marcas){
+  chMedio.data.datasets[0].data = ORDEN.map(k=>notas.filter(n=>n.medio===k).length);
+  chMedio.update();
+  const op = marcas.filter(m=>!m.pauta_en_eo && m.marca!=="(sin identificar)").length;
+  const si = marcas.filter(m=>m.pauta_en_eo).length;
+  chOp.data.datasets[0].data = [op, si];
+  chOp.update();
+}
+
+// ---- render ----
+function sortBy(arr, key, dir, accessor){
+  const s=[...arr].sort((a,b)=>{ let x=accessor(a),y=accessor(b);
+    if(typeof x==="string"){x=x.toLowerCase();y=(y||"").toLowerCase();}
+    return x<y?-1:x>y?1:0; });
+  return dir==="desc"? s.reverse():s;
+}
+
+function celdas(m){ return ORDEN.map(k=>{const n=m.medios[k]||0;
+  return `<td class="center"><span class="dot ${n?"":"cero"}">${n}</span></td>`;}).join(""); }
+
+function renderMarcas(marcas){
+  const [key,dir]=state.sortMarca;
+  const acc = key==="marca"?(m=>m.marca): key==="total"?(m=>m.total):(m=>m.pauta_en_eo?1:0);
+  const ms = sortBy(marcas,key,dir,acc);
+  document.getElementById("badgeMarcas").textContent = `${marcas.length}`;
+  const arr=(k)=> state.sortMarca[0]===k? (state.sortMarca[1]==="asc"?"▲":"▼"):"";
+  document.getElementById("tabla-marcas").innerHTML = ms.length ? `
+    <table><thead><tr>
+      <th data-sm="marca">Marca <span class="arr">${arr("marca")}</span></th>
+      ${ORDEN.map(k=>`<th class="center">${MEDIOS[k]}</th>`).join("")}
+      <th class="center" data-sm="total"># notas <span class="arr">${arr("total")}</span></th>
+      <th data-sm="eo">Lectura comercial <span class="arr">${arr("eo")}</span></th>
+    </tr></thead><tbody>
+    ${ms.map(m=>{
+      const lectura = m.marca==="(sin identificar)" ? `<span class="chip">sin marca</span>`
+        : m.pauta_en_eo ? `<span class="pill si">✓ ya pauta con nosotros</span>`
+        : `<span class="pill op">⚡ pauta en competencia</span>`;
+      return `<tr><td><strong>${m.marca}</strong></td>${celdas(m)}
+        <td class="center"><span class="dot">${m.total}</span></td><td>${lectura}</td></tr>`;
+    }).join("")}
+    </tbody></table>` : `<div class="vacio">No hay marcas con los filtros actuales.</div>`;
+  document.querySelectorAll("[data-sm]").forEach(th=>th.onclick=()=>{
+    const k=th.dataset.sm; state.sortMarca = state.sortMarca[0]===k?[k,state.sortMarca[1]==="asc"?"desc":"asc"]:[k,"asc"]; render();});
+}
+
+function renderNotas(notas){
+  const [key,dir]=state.sortNota;
+  const acc = key==="fecha"?(n=>n.fecha||""): key==="medio"?(n=>MEDIOS[n.medio]): (n=>n.marca||"");
+  const ns = sortBy(notas,key,dir,acc);
+  document.getElementById("badgeNotas").textContent = `${notas.length}`;
+  const arr=(k)=> state.sortNota[0]===k? (state.sortNota[1]==="asc"?"▲":"▼"):"";
+  document.getElementById("lista-notas").innerHTML = ns.length ? `
+    <table><thead><tr>
+      <th data-sn="medio">Medio <span class="arr">${arr("medio")}</span></th>
+      <th data-sn="marca">Marca <span class="arr">${arr("marca")}</span></th>
+      <th>Nota</th>
+      <th data-sn="fecha">Fecha <span class="arr">${arr("fecha")}</span></th>
+      <th>Señales</th>
+    </tr></thead><tbody>
+    ${ns.map(n=>{
+      const op = n.marca && !PAUTA[n.marca];
+      return `<tr>
+        <td><span class="medio-tag" style="color:${COLOR[n.medio]}">${MEDIOS[n.medio]}</span></td>
+        <td><strong>${n.marca||"—"}</strong> ${op?'<span class="pill op" style="font-size:10px">⚡</span>':""}</td>
+        <td><a class="titulo-nota" href="${n.url}" target="_blank">${n.titulo||n.url}</a>
+            ${n.seccion?`<div class="fecha">sección: ${n.seccion}</div>`:""}</td>
+        <td>${n.fecha?n.fecha.slice(0,10):"—"}</td>
+        <td>${(n["señales"]||[]).map(s=>`<span class="chip ${s.startsWith("llm")?"llm":""}">${s}</span>`).join("")}</td>
+      </tr>`;
+    }).join("")}
+    </tbody></table>` : `<div class="vacio">No hay notas con los filtros actuales.</div>`;
+  document.querySelectorAll("[data-sn]").forEach(th=>th.onclick=()=>{
+    const k=th.dataset.sn; state.sortNota = state.sortNota[0]===k?[k,state.sortNota[1]==="asc"?"desc":"asc"]:[k,"asc"]; render();});
+}
+
+function renderKpis(notas, marcas){
+  const op = marcas.filter(m=>!m.pauta_en_eo && m.marca!=="(sin identificar)").length;
+  const mediosActivos = new Set(notas.map(n=>n.medio)).size;
+  document.getElementById("kpis").innerHTML = [
+    [notas.length,"Notas comerciales","ink"],
+    [marcas.filter(m=>m.marca!=="(sin identificar)").length,"Marcas únicas",""],
+    [op,"Pautan afuera y no con nosotros","op"],
+    [mediosActivos+" / "+ORDEN.length,"Medios con pauta","blue"],
+  ].map(([n,l,c])=>`<div class="kpi ${c}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+}
+
+function render(){
+  const notas = notasFiltradas();
+  const marcas = marcasFiltradas(notas);
+  document.getElementById("resultados").textContent = `${notas.length} notas · ${marcas.length} marcas`;
+  renderKpis(notas, marcas);
+  updateCharts(notas, marcas);
+  renderMarcas(marcas);
+  renderNotas(notas);
+}
+
+// ---- eventos ----
+document.getElementById("q").addEventListener("input", e=>{state.q=e.target.value; render();});
+document.getElementById("selSeccion").addEventListener("change", e=>{state.seccion=e.target.value; render();});
+document.querySelectorAll("[data-medio]").forEach(ch=>ch.addEventListener("click",()=>{
+  const k=ch.dataset.medio;
+  if(state.medios.has(k)){state.medios.delete(k); ch.classList.remove("on");}
+  else{state.medios.add(k); ch.classList.add("on");}
+  render();
+}));
+document.getElementById("chipOp").addEventListener("click",function(){
+  state.soloOp=!state.soloOp; this.classList.toggle("on"); render();
+});
+document.getElementById("btnClr").addEventListener("click",()=>{
+  state.q=""; state.medios=new Set(ORDEN); state.soloOp=false; state.seccion="all";
+  document.getElementById("q").value=""; document.getElementById("selSeccion").value="all";
+  document.querySelectorAll("[data-medio]").forEach(c=>c.classList.add("on"));
+  document.getElementById("chipOp").classList.remove("on");
+  render();
+});
+
+initCharts();
+render();
 </script>
 </body>
 </html>
