@@ -1,5 +1,6 @@
 """Genera dashboard.html standalone con data/latest.json embebido (doble click y listo)."""
 
+import base64
 import json
 import os
 
@@ -15,7 +16,9 @@ TEMPLATE = r"""<!DOCTYPE html>
   :root { --azul:#00386c; --acento:#f5a623; --gris:#f4f6f8; --borde:#e2e8f0; }
   * { box-sizing:border-box; margin:0; }
   body { font-family:-apple-system,'Segoe UI',Roboto,sans-serif; background:var(--gris); color:#1a202c; }
-  header { background:var(--azul); color:#fff; padding:22px 32px; display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; }
+  header { background:var(--azul); color:#fff; padding:22px 32px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  header img.logo { width:44px; height:44px; border-radius:9px; flex:0 0 auto; }
+  header .titulo { display:flex; flex-direction:column; gap:3px; }
   header h1 { font-size:21px; font-weight:700; }
   header .sub { opacity:.75; font-size:13px; }
   main { max-width:1180px; margin:26px auto; padding:0 20px; }
@@ -42,8 +45,11 @@ TEMPLATE = r"""<!DOCTYPE html>
 </head>
 <body>
 <header>
-  <h1>Pauta comercial en medios uruguayos</h1>
-  <span class="sub" id="sub"></span>
+  <img class="logo" src="data:image/png;base64,__LOGO__" alt="El Observador">
+  <div class="titulo">
+    <h1>Pauta comercial en medios uruguayos</h1>
+    <span class="sub" id="sub"></span>
+  </div>
 </header>
 <main>
   <div class="kpis" id="kpis"></div>
@@ -114,9 +120,13 @@ document.getElementById("lista-notas").innerHTML = notas.length ? `
 def build():
     with open(os.path.join(config.DATA_DIR, "latest.json"), encoding="utf-8") as f:
         data = json.load(f)
+    logo_path = os.path.join(os.path.dirname(__file__), "logo.png")
+    with open(logo_path, "rb") as f:
+        logo_b64 = base64.b64encode(f.read()).decode("ascii")
     html = (TEMPLATE
             .replace("__DATA__", json.dumps(data, ensure_ascii=False))
-            .replace("__GENERADO__", data["generado"]))
+            .replace("__GENERADO__", data["generado"])
+            .replace("__LOGO__", logo_b64))
     with open(config.DASHBOARD_FILE, "w", encoding="utf-8") as f:
         f.write(html)
 
