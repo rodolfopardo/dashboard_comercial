@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pauta comercial en medios uruguayos · El Observador</title>
+<style>
+  :root { --azul:#00386c; --acento:#f5a623; --gris:#f4f6f8; --borde:#e2e8f0; }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:-apple-system,'Segoe UI',Roboto,sans-serif; background:var(--gris); color:#1a202c; }
+  header { background:var(--azul); color:#fff; padding:22px 32px; display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; }
+  header h1 { font-size:21px; font-weight:700; }
+  header .sub { opacity:.75; font-size:13px; }
+  main { max-width:1180px; margin:26px auto; padding:0 20px; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:26px; }
+  .kpi { background:#fff; border:1px solid var(--borde); border-radius:10px; padding:16px 18px; }
+  .kpi .n { font-size:30px; font-weight:800; color:var(--azul); }
+  .kpi .l { font-size:12px; color:#64748b; margin-top:4px; text-transform:uppercase; letter-spacing:.4px; }
+  h2 { font-size:16px; margin:26px 0 12px; color:var(--azul); }
+  table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--borde); border-radius:10px; overflow:hidden; font-size:14px; }
+  th { background:#eef2f7; text-align:left; padding:10px 12px; font-size:12px; text-transform:uppercase; letter-spacing:.4px; color:#475569; }
+  td { padding:10px 12px; border-top:1px solid var(--borde); vertical-align:top; }
+  td.center, th.center { text-align:center; }
+  .dot { display:inline-block; min-width:26px; padding:2px 7px; border-radius:99px; background:var(--azul); color:#fff; font-weight:700; font-size:12px; }
+  .dot.cero { background:#cbd5e1; color:#475569; font-weight:400; }
+  .chip { display:inline-block; background:#eef2f7; border-radius:6px; padding:2px 8px; font-size:11px; color:#475569; margin:1px 2px; }
+  .chip.op { background:#fff7e6; color:#92600a; border:1px solid #f5d9a8; font-weight:600; }
+  .chip.si { background:#e6f6ec; color:#176b3a; }
+  a { color:var(--azul); }
+  .nota { margin:3px 0; line-height:1.45; }
+  .nota .medio { font-size:11px; color:#64748b; }
+  .vacio { background:#fff; border:1px dashed var(--borde); border-radius:10px; padding:28px; text-align:center; color:#64748b; }
+  footer { text-align:center; color:#94a3b8; font-size:12px; margin:34px 0 22px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pauta comercial en medios uruguayos</h1>
+  <span class="sub" id="sub"></span>
+</header>
+<main>
+  <div class="kpis" id="kpis"></div>
+  <h2>Marcas que pautaron esta semana</h2>
+  <div id="tabla-marcas"></div>
+  <h2>Todas las notas comerciales detectadas</h2>
+  <div id="lista-notas"></div>
+</main>
+<footer>El Observador · Identificador de contenido comercial · generado 2026-06-15T21:19:18</footer>
+<script>
+const DATA = {"generado": "2026-06-15T21:19:18", "semana": "2026-W25", "ventana_dias": 7, "medios": {"elobservador": "El Observador", "elpais": "El País", "montevideo": "Montevideo Portal", "ladiaria": "la diaria"}, "resumen": {"notas_analizadas": 2530, "notas_comerciales": 13, "marcas_unicas": 13, "por_medio": {"elobservador": 0, "elpais": 7, "montevideo": 6, "ladiaria": 0}}, "marcas": [{"marca": "Tres Cruces", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/negocios/empresas/tres-cruces-genera-energia-renovable-con-2-400-paneles-solares-para-abastecer-el-equivalente-al-consumo-de-600-hogares", "titulo": "Tres Cruces genera energía renovable con 2.400 paneles solares para abastecer el  equivalente al consumo de 600 hogares", "fecha": "2026-06-15T03:00:00-04:00", "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Alfonsina", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/musica/alfonsina-presenta-pausa-y-fogueo-su-nuevo-album-me-canso-mucho-estar-detras-de-mi-nombre", "titulo": "Alfonsina presenta \"Pausa y fogueo\", su nuevo álbum: \"Me cansó mucho estar detrás de mi nombre\"", "fecha": "2026-06-15T01:00:00-04:00", "señales": ["lexico:presenta", "llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Toy Story 5", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/cine/el-pais-con-la-productora-de-toy-story-5-mas-alla-de-los-avances-tecnologicos-lo-fundamental-es-la-historia", "titulo": "El País con la productora de \"Toy Story 5\": \"Más allá de los avances tecnológicos lo fundamental es la historia\"", "fecha": "2026-06-14T01:00:00-04:00", "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "No Te Va Gustar", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/musica/no-te-va-gustar-trae-la-gira-de-florece-en-el-caos-no-queremos-ser-una-banda-tributo-de-lo-que-fuimos", "titulo": "No Te Va Gustar trae la gira de \"Florece en el caos\": \"No queremos ser una banda tributo de lo que fuimos\"", "fecha": "2026-06-14T01:02:00-04:00", "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "APPCU", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/negocios/columna-de-appcu-productividad-sin-limite", "titulo": "Columna de APPCU: “Productividad” sin límite", "fecha": "2026-06-14T02:10:16-04:00", "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "K-Pop World Festival", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/bienestar/descanso/viajes-y-paseos/k-pop-world-festival-2026-la-gran-cita-de-la-cultura-coreana-vuelve-a-encender-la-sala-zitarrosa", "titulo": "K-Pop World Festival 2026: la gran cita de la cultura coreana vuelve a encender la Sala Zitarrosa", "fecha": "2026-06-15T13:00:00-04:00", "señales": ["llm:1.0"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Luana", "medios": {"elpais": 1}, "notas": [{"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/personajes/luana-hara-el-show-mas-grande-de-su-carrera-para-festejar-su-cumpleanos-fecha-lugar-y-como-comprar-entradas", "titulo": "Luana hará el show más grande de su carrera para festejar su cumpleaños: fecha, lugar y cómo comprar entradas", "fecha": "2026-06-15T10:04:52-04:00", "señales": ["lexico:festeja", "llm:1.0"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Impacto", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://www.montevideo.com.uy/Columnistas/Impacto-transformador-el-proposito-empresarial-definido-desde-el-liderazgo-sostenible-uc874426", "titulo": "Impacto transformador: el propósito empresarial definido desde el liderazgo sostenible", "fecha": null, "señales": ["tag Empresariales"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "TECH Global University", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://www.montevideo.com.uy/Negocios-y-Tendencias/TECH-Global-University-tiene-un-claustro-docente-que-la-posiciona-como-el-Harvard-online--uc964314", "titulo": "TECH Global University tiene un claustro docente que la posiciona como el Harvard online", "fecha": null, "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "Coca-Cola", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://www.montevideo.com.uy/Negocios-y-Tendencias/El-sistema-Coca-Cola-en-Uruguay-avanza-en-su-compromiso-con-el-cuidado-del-medioambiente-uc964182", "titulo": "El sistema Coca Cola en Uruguay avanza en su compromiso con el cuidado del medioambiente", "fecha": null, "señales": ["llm:0.9"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "DIRECTV", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQcXpZYVpSakxOUmR5bG11N2w4Zk1wRHVYbEFDTEdxTE9BRXJ0NUFuUUJQeHZpYXZrR3lXWVROX1czeEhrZXZOYmR6bzkzeGZ3bndIcnVSSUVwcXNJc3ZiQ3BmTEJ1OWVWLVVvcmRDbF9IZTdDcUQ4Uk1JbXdPVUNkVlVYNlZTclhGOVZJQ0pHb1dLSnNzZ0dTUmU1OEk2bFR0WXc5ZXpHZk9lVTVqNHQ2cWkzVEZ6WXdXdUwtaVlvVGVNVE5WYWJyc0NTTHo3d9IB8gFBVV95cUxQSUV0VWxqc1NsWXRWcE5mekFBOHNOdC1yXzVVZ1NXeHVhcG1NX2tXWDM3S0NBN1h5VXNUaEFabmpVeGVYOXN0STZ0cEgybE5WdUF2dTVTUkZOckh0R3lBbThuOFlaNU9uUktnYm0zRzhaZjFRQWRJWFJDWlB3QTN0c1p5WkJKZEVrbGkwZUc0cDQtYlRaaGM4M2dzTEhaYUdnaHJKekszQ3dUaGc1RERBZWFSQmdpeXpVN3duYVJ0bllNOUlsVmJqMzVsaUlxbFphcjA2a1EzOXJWMzVGNGNxV3FrVTE5dmRfa0NQUk8xR0sxQQ?oc=5", "titulo": "Agenda deportiva de DIRECTV del fin de semana: el Mundial, vóley, ciclismo, motor y rugby", "fecha": "Fri, 12 Jun 2026 03:24:00 GMT", "señales": ["llm:1.0"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "PedidosYa", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOMjRBdDRhYjFKRkF6dDl0U3BWVjYyZTBIZGFuMjQ4S0pJa1VHLXgyX0R6ZjBpSUNRTGtqRi1fTU1SZjZlQlNlQlhySk5EaWJoNERqcXpDWWRpb3pYV1FrSjFhTzIyTnc2cXpSR0RUWFBFQUpLdEo4LThNZ3dCOXVxTU9KOUFNN05hNk40U253clJSMEQzbW95cnh4YS1wZkV2YzFvdTBfdHdkazRuNllaN0FWRWJsZ2FiSUM2dmI2WEZoNURpMXlZMHBoeWJ5RWZfUFdfbGtn0gH6AUFVX3lxTE1YcUlqdi1KZERDN2JBV3U3b3BYM2c0blJCZmdGTkpXZlB1WE1mTWpYRUgzTTVKQlU0ZW56ZnZLWi1VMTkxSkRkOXNDYW9sQVFkNGFpN1pIOHQ4SFhTYmRkVUhkZUxHbkVjQzZtUUE0TmlLendqbW9RdGFLVk9jajMtYzJVbDJuNUNsTDBuX3hxMS1RRkN3azFqY2tRTEQ5ZE1LV1BtbjlKWFZIR0g5U1pPTDlLVWxpRml6S3BzT3VLRzg4LTZDMnRIa2hJNHFlNTBTRGNiaXdJRXNKX1JvU0plYmc3b0VURkdDX2ZMaVVJZGlIUFFxeFNhUnc?oc=5", "titulo": "PedidosYa regala miles de cupones con cada gol en el Mundial: cómo conseguirlos", "fecha": "Mon, 15 Jun 2026 11:30:00 GMT", "señales": ["llm:1.0"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}, {"marca": "MetLife", "medios": {"montevideo": 1}, "notas": [{"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxQSU9sYzNzTGpQUHJWb3Y3NVFPTVJmRGtvcm8xRXlidmtLc1g3MVczNTJWUEJPdXlndlNxblA3c3hGcl9GQVp1UnI2MEZyc3VQMHgzb3p0eG9kUWR0OExWdElWaGR5eURza2gtQ2JSaE5wQlRpOVNRRFN4cmtJZHU3eC1xRnVyLXFpcWY3NlRyWG9Tdm50cjlFV3ViZm9kZlRjVzNkNGp0bXJNOVhFUUNXMTRFcjRnX2NzTkxhbzJURWg1eFNjVjJyNWJxU1RfSE85bTVyTW53M3dVVVlBTjdwNw?oc=5", "titulo": "MetLife y MetLife Foundation renuevan espacios deportivos y comunitarios en Montevideo", "fecha": "Tue, 09 Jun 2026 15:34:00 GMT", "señales": ["lexico:renueva", "llm:"]}], "pauta_en_eo": false, "mencion_editorial_eo": []}], "notas_comerciales": [{"medio": "elpais", "url": "https://www.elpais.com.uy/negocios/empresas/tres-cruces-genera-energia-renovable-con-2-400-paneles-solares-para-abastecer-el-equivalente-al-consumo-de-600-hogares", "titulo": "Tres Cruces genera energía renovable con 2.400 paneles solares para abastecer el  equivalente al consumo de 600 hogares", "seccion": "negocios", "fecha": "2026-06-15T03:00:00-04:00", "marca": "Tres Cruces", "señales": ["llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/musica/alfonsina-presenta-pausa-y-fogueo-su-nuevo-album-me-canso-mucho-estar-detras-de-mi-nombre", "titulo": "Alfonsina presenta \"Pausa y fogueo\", su nuevo álbum: \"Me cansó mucho estar detrás de mi nombre\"", "seccion": "tvshow", "fecha": "2026-06-15T01:00:00-04:00", "marca": "Alfonsina", "señales": ["lexico:presenta", "llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/cine/el-pais-con-la-productora-de-toy-story-5-mas-alla-de-los-avances-tecnologicos-lo-fundamental-es-la-historia", "titulo": "El País con la productora de \"Toy Story 5\": \"Más allá de los avances tecnológicos lo fundamental es la historia\"", "seccion": "tvshow", "fecha": "2026-06-14T01:00:00-04:00", "marca": "Toy Story 5", "señales": ["llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/musica/no-te-va-gustar-trae-la-gira-de-florece-en-el-caos-no-queremos-ser-una-banda-tributo-de-lo-que-fuimos", "titulo": "No Te Va Gustar trae la gira de \"Florece en el caos\": \"No queremos ser una banda tributo de lo que fuimos\"", "seccion": "tvshow", "fecha": "2026-06-14T01:02:00-04:00", "marca": "No Te Va Gustar", "señales": ["llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/negocios/columna-de-appcu-productividad-sin-limite", "titulo": "Columna de APPCU: “Productividad” sin límite", "seccion": "negocios", "fecha": "2026-06-14T02:10:16-04:00", "marca": "APPCU", "señales": ["llm:0.9"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/bienestar/descanso/viajes-y-paseos/k-pop-world-festival-2026-la-gran-cita-de-la-cultura-coreana-vuelve-a-encender-la-sala-zitarrosa", "titulo": "K-Pop World Festival 2026: la gran cita de la cultura coreana vuelve a encender la Sala Zitarrosa", "seccion": "bienestar", "fecha": "2026-06-15T13:00:00-04:00", "marca": "K-Pop World Festival", "señales": ["llm:1.0"]}, {"medio": "elpais", "url": "https://www.elpais.com.uy/tvshow/personajes/luana-hara-el-show-mas-grande-de-su-carrera-para-festejar-su-cumpleanos-fecha-lugar-y-como-comprar-entradas", "titulo": "Luana hará el show más grande de su carrera para festejar su cumpleaños: fecha, lugar y cómo comprar entradas", "seccion": "tvshow", "fecha": "2026-06-15T10:04:52-04:00", "marca": "Luana", "señales": ["lexico:festeja", "llm:1.0"]}, {"medio": "montevideo", "url": "https://www.montevideo.com.uy/Columnistas/Impacto-transformador-el-proposito-empresarial-definido-desde-el-liderazgo-sostenible-uc874426", "titulo": "Impacto transformador: el propósito empresarial definido desde el liderazgo sostenible", "seccion": "Columnistas", "fecha": null, "marca": "Impacto", "señales": ["tag Empresariales"]}, {"medio": "montevideo", "url": "https://www.montevideo.com.uy/Negocios-y-Tendencias/TECH-Global-University-tiene-un-claustro-docente-que-la-posiciona-como-el-Harvard-online--uc964314", "titulo": "TECH Global University tiene un claustro docente que la posiciona como el Harvard online", "seccion": "Negocios-y-Tendencias", "fecha": null, "marca": "TECH Global University", "señales": ["llm:0.9"]}, {"medio": "montevideo", "url": "https://www.montevideo.com.uy/Negocios-y-Tendencias/El-sistema-Coca-Cola-en-Uruguay-avanza-en-su-compromiso-con-el-cuidado-del-medioambiente-uc964182", "titulo": "El sistema Coca Cola en Uruguay avanza en su compromiso con el cuidado del medioambiente", "seccion": "Negocios-y-Tendencias", "fecha": null, "marca": "Coca-Cola", "señales": ["llm:0.9"]}, {"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQcXpZYVpSakxOUmR5bG11N2w4Zk1wRHVYbEFDTEdxTE9BRXJ0NUFuUUJQeHZpYXZrR3lXWVROX1czeEhrZXZOYmR6bzkzeGZ3bndIcnVSSUVwcXNJc3ZiQ3BmTEJ1OWVWLVVvcmRDbF9IZTdDcUQ4Uk1JbXdPVUNkVlVYNlZTclhGOVZJQ0pHb1dLSnNzZ0dTUmU1OEk2bFR0WXc5ZXpHZk9lVTVqNHQ2cWkzVEZ6WXdXdUwtaVlvVGVNVE5WYWJyc0NTTHo3d9IB8gFBVV95cUxQSUV0VWxqc1NsWXRWcE5mekFBOHNOdC1yXzVVZ1NXeHVhcG1NX2tXWDM3S0NBN1h5VXNUaEFabmpVeGVYOXN0STZ0cEgybE5WdUF2dTVTUkZOckh0R3lBbThuOFlaNU9uUktnYm0zRzhaZjFRQWRJWFJDWlB3QTN0c1p5WkJKZEVrbGkwZUc0cDQtYlRaaGM4M2dzTEhaYUdnaHJKekszQ3dUaGc1RERBZWFSQmdpeXpVN3duYVJ0bllNOUlsVmJqMzVsaUlxbFphcjA2a1EzOXJWMzVGNGNxV3FrVTE5dmRfa0NQUk8xR0sxQQ?oc=5", "titulo": "Agenda deportiva de DIRECTV del fin de semana: el Mundial, vóley, ciclismo, motor y rugby", "seccion": null, "fecha": "Fri, 12 Jun 2026 03:24:00 GMT", "marca": "DIRECTV", "señales": ["llm:1.0"]}, {"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOMjRBdDRhYjFKRkF6dDl0U3BWVjYyZTBIZGFuMjQ4S0pJa1VHLXgyX0R6ZjBpSUNRTGtqRi1fTU1SZjZlQlNlQlhySk5EaWJoNERqcXpDWWRpb3pYV1FrSjFhTzIyTnc2cXpSR0RUWFBFQUpLdEo4LThNZ3dCOXVxTU9KOUFNN05hNk40U253clJSMEQzbW95cnh4YS1wZkV2YzFvdTBfdHdkazRuNllaN0FWRWJsZ2FiSUM2dmI2WEZoNURpMXlZMHBoeWJ5RWZfUFdfbGtn0gH6AUFVX3lxTE1YcUlqdi1KZERDN2JBV3U3b3BYM2c0blJCZmdGTkpXZlB1WE1mTWpYRUgzTTVKQlU0ZW56ZnZLWi1VMTkxSkRkOXNDYW9sQVFkNGFpN1pIOHQ4SFhTYmRkVUhkZUxHbkVjQzZtUUE0TmlLendqbW9RdGFLVk9jajMtYzJVbDJuNUNsTDBuX3hxMS1RRkN3azFqY2tRTEQ5ZE1LV1BtbjlKWFZIR0g5U1pPTDlLVWxpRml6S3BzT3VLRzg4LTZDMnRIa2hJNHFlNTBTRGNiaXdJRXNKX1JvU0plYmc3b0VURkdDX2ZMaVVJZGlIUFFxeFNhUnc?oc=5", "titulo": "PedidosYa regala miles de cupones con cada gol en el Mundial: cómo conseguirlos", "seccion": null, "fecha": "Mon, 15 Jun 2026 11:30:00 GMT", "marca": "PedidosYa", "señales": ["llm:1.0"]}, {"medio": "montevideo", "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxQSU9sYzNzTGpQUHJWb3Y3NVFPTVJmRGtvcm8xRXlidmtLc1g3MVczNTJWUEJPdXlndlNxblA3c3hGcl9GQVp1UnI2MEZyc3VQMHgzb3p0eG9kUWR0OExWdElWaGR5eURza2gtQ2JSaE5wQlRpOVNRRFN4cmtJZHU3eC1xRnVyLXFpcWY3NlRyWG9Tdm50cjlFV3ViZm9kZlRjVzNkNGp0bXJNOVhFUUNXMTRFcjRnX2NzTkxhbzJURWg1eFNjVjJyNWJxU1RfSE85bTVyTW53M3dVVVlBTjdwNw?oc=5", "titulo": "MetLife y MetLife Foundation renuevan espacios deportivos y comunitarios en Montevideo", "seccion": null, "fecha": "Tue, 09 Jun 2026 15:34:00 GMT", "marca": "MetLife", "señales": ["lexico:renueva", "llm:"]}]};
+const MEDIOS = DATA.medios;
+const ORDEN = ["elobservador","elpais","montevideo","ladiaria"];
+
+document.getElementById("sub").textContent =
+  `Semana ${DATA.semana} · últimos ${DATA.ventana_dias} días · generado ${DATA.generado.replace("T"," ")}`;
+
+const r = DATA.resumen;
+const oportunidades = DATA.marcas.filter(m => !m.pauta_en_eo && m.marca !== "(sin identificar)").length;
+document.getElementById("kpis").innerHTML = [
+  [r.notas_comerciales, "Notas comerciales"],
+  [r.marcas_unicas, "Marcas únicas"],
+  [r.por_medio.elobservador ?? 0, "En El Observador"],
+  [oportunidades, "Pautan afuera y no con nosotros"],
+  [r.notas_analizadas, "Notas analizadas"],
+].map(([n,l]) => `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+
+function celdas(m) {
+  return ORDEN.map(k => {
+    const n = m.medios[k] || 0;
+    return `<td class="center"><span class="dot ${n? "":"cero"}">${n}</span></td>`;
+  }).join("");
+}
+
+const marcas = DATA.marcas;
+document.getElementById("tabla-marcas").innerHTML = marcas.length ? `
+  <table>
+    <tr><th>Marca</th>${ORDEN.map(k=>`<th class="center">${MEDIOS[k]}</th>`).join("")}
+        <th>Nota en El Observador</th><th>Lectura comercial</th></tr>
+    ${marcas.map(m => {
+      const menciones = (m.mencion_editorial_eo||[]).map(n =>
+        `<div class="nota"><a href="${n.url}" target="_blank">${n.titulo||n.url}</a></div>`).join("") || "—";
+      const lectura = m.pauta_en_eo
+        ? `<span class="chip si">ya pauta con nosotros</span>`
+        : `<span class="chip op">OPORTUNIDAD: pauta en competencia</span>`;
+      return `<tr><td><strong>${m.marca}</strong></td>${celdas(m)}<td>${menciones}</td><td>${lectura}</td></tr>`;
+    }).join("")}
+  </table>` : `<div class="vacio">No se detectaron notas comerciales esta semana.</div>`;
+
+const notas = DATA.notas_comerciales;
+document.getElementById("lista-notas").innerHTML = notas.length ? `
+  <table>
+    <tr><th>Medio</th><th>Marca</th><th>Nota</th><th>Señales de detección</th></tr>
+    ${notas.map(n => `<tr>
+      <td>${MEDIOS[n.medio]}</td>
+      <td><strong>${n.marca||"—"}</strong></td>
+      <td class="nota"><a href="${n.url}" target="_blank">${n.titulo||n.url}</a>
+          ${n.fecha? `<div class="medio">${n.fecha}</div>`:""}</td>
+      <td>${(n["señales"]||[]).map(s=>`<span class="chip">${s}</span>`).join("")}</td>
+    </tr>`).join("")}
+  </table>` : `<div class="vacio">Sin notas comerciales detectadas.</div>`;
+</script>
+</body>
+</html>
